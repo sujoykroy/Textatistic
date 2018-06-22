@@ -5,8 +5,22 @@ import re
 import csv
 import os
 from math import sqrt
-from hyphen import Hyphenator
+try:
+    from hyphen import Hyphenator
+except ImportError:
+    from pyphen import Pyphen
+    class Hyphenator(object):
+        def __init__(self, language):
+            self.pyphen = Pyphen(lang=language)
 
+        def syllables(self, word):
+            word = word.decode("utf-8")
+            syllables = list(self.pyphen.iterate(word))
+            if not syllables:
+                syllables = [word]
+            return syllables
+
+import six
 
 class EasyWords(object):
     """Object containing Dale-Chall list of easy words."""
@@ -120,7 +134,12 @@ def word_array(text, abbr=Abbreviations(), prepped=False):
     """Generate list of words."""
     if not prepped:
         text = punct_clean(text, abbr)
-    return text.replace("-", ' ').translate(str.maketrans("", "", string.punctuation)).split()
+    text = text.replace("-", ' ')
+    if six.PY2:
+        text = text.translate(None, string.punctuation)
+    else:
+        text = text.translate(str.maketrans("", "", string.punctuation))
+    return text.split()
 
 
 # Calculate text statistics.
