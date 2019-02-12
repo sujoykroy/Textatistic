@@ -210,13 +210,13 @@ def dalechall_score(text=None, abbr=None, easy=None, vars={}):
         text = punct_clean(text, abbr)
         vars['sent_count'] = sent_count(text, abbr, True)
         text = word_array(text, abbr, True)
-        vars['word_count'] = float(word_count(text, abbr, True))
-        vars['notdalechall_count'] = float(notdalechall_count(text, abbr, easy, True))
-    if vars['notdalechall_count'] / vars['word_count'] > 0.05:
+        vars['word_count'] = word_count(text, abbr, True)
+        vars['notdalechall_count'] = notdalechall_count(text, abbr, easy, True)
+    if vars['notdalechall_count'] / float(vars['word_count']) > 0.05:
         cons = 3.6365
     else:
         cons = 0
-    return cons + 15.79 * (vars['notdalechall_count'] / vars['word_count']) + 0.0496 * (vars['word_count'] / vars['sent_count'])
+    return cons + 15.79 * (vars['notdalechall_count'] / float(vars['word_count'])) + 0.0496 * (vars['word_count'] / float(vars['sent_count']))
 
 
 def flesch_score(text=None, abbr=None, hyphen=None, vars={}):
@@ -229,9 +229,9 @@ def flesch_score(text=None, abbr=None, hyphen=None, vars={}):
         text = punct_clean(text, abbr)
         vars['sent_count'] = sent_count(text, abbr, True)
         text = word_array(text, abbr, True)
-        vars['word_count'] = float(word_count(text, abbr, True))
-        vars['sybl_count'] = float(sybl_counts(text, abbr, hyphen, True)['sybl_count'])
-    return 206.835 - 1.015 * (vars['word_count'] / vars['sent_count']) - 84.6 * (vars['sybl_count'] / vars['word_count'])
+        vars['word_count'] = word_count(text, abbr, True)
+        vars['sybl_count'] = sybl_counts(text, abbr, hyphen, True)['sybl_count']
+    return 206.835 - 1.015 * (vars['word_count'] /float( vars['sent_count'])) - 84.6 * (vars['sybl_count'] / float(vars['word_count']))
 
 
 def fleschkincaid_score(text=None, abbr=None, hyphen=None, vars={}):
@@ -244,9 +244,9 @@ def fleschkincaid_score(text=None, abbr=None, hyphen=None, vars={}):
         text = punct_clean(text, abbr)
         vars['sent_count'] = sent_count(text, abbr, True)
         text = word_array(text, abbr, True)
-        vars['word_count'] = float(word_count(text, abbr, True))
-        vars['sybl_count'] = float(sybl_counts(text, abbr, hyphen, True)['sybl_count'])
-    return - 15.59 + 0.39 * (vars['word_count'] / vars['sent_count']) + 11.8 * (vars['sybl_count'] / vars['word_count'])
+        vars['word_count'] = word_count(text, abbr, True)
+        vars['sybl_count'] = sybl_counts(text, abbr, hyphen, True)['sybl_count']
+    return - 15.59 + 0.39 * (vars['word_count'] / float(vars['sent_count'])) + 11.8 * (vars['sybl_count'] / float(vars['word_count']))
 
 
 def gunningfog_score(text=None, abbr=None, hyphen=None, vars={}):
@@ -259,9 +259,9 @@ def gunningfog_score(text=None, abbr=None, hyphen=None, vars={}):
         text = punct_clean(text, abbr)
         vars['sent_count'] = sent_count(text, abbr, True)
         text = word_array(text, abbr, True)
-        vars['word_count'] = float(word_count(text, abbr, True))
-        vars['polysyblword_count'] = float(sybl_counts(text, abbr, hyphen, True)['polysyblword_count'])
-    return 0.4 * ((vars['word_count'] / vars['sent_count']) + 100 * (vars['polysyblword_count'] / vars['word_count']))
+        vars['word_count'] = word_count(text, abbr, True)
+        vars['polysyblword_count'] = sybl_counts(text, abbr, hyphen, True)['polysyblword_count']
+    return 0.4 * ((vars['word_count'] / float(vars['sent_count'])) + 100 * (vars['polysyblword_count'] / float(vars['word_count'])))
 
 
 def smog_score(text=None, abbr=None, hyphen=None, vars={}):
@@ -272,7 +272,7 @@ def smog_score(text=None, abbr=None, hyphen=None, vars={}):
         if not hyphen:
             hyphen = Hyphenator('en_US')
         text = punct_clean(text, abbr)
-        vars['sent_count'] = float(sent_count(text, abbr, True))
+        vars['sent_count'] = sent_count(text, abbr, True)
         text = word_array(text, abbr, True)
-        vars['polysyblword_count'] = float(sybl_counts(text, abbr, hyphen, True)['polysyblword_count'])
-    return 3.1291 + 1.0430 * sqrt(30 * (vars['polysyblword_count'] / vars['sent_count']))
+        vars['polysyblword_count'] = sybl_counts(text, abbr, hyphen, True)['polysyblword_count']
+    return 3.1291 + 1.0430 * sqrt(30 * (vars['polysyblword_count'] / float(vars['sent_count'])))
